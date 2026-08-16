@@ -33,7 +33,27 @@ SUPPORTED_AUDIO_EXTENSIONS = {
     ".ogg",
 }
 
-SUPPORTED_EXTENSIONS = SUPPORTED_VIDEO_EXTENSIONS | SUPPORTED_AUDIO_EXTENSIONS
+# Still images and animated GIFs. FFmpeg treats these as ordinary
+# muxer formats for both input (e.g. a watermark/overlay PNG) and
+# output (e.g. a thumbnail or spritesheet export) - they were missing
+# entirely, which meant every image-producing or image-consuming
+# operation (thumbnail/gif/spritesheet exports, and the pre-existing
+# watermark/overlay operations' image inputs) failed JobValidator with
+# "Unsupported ... format" despite otherwise-correct FFmpegJobs.
+SUPPORTED_IMAGE_EXTENSIONS = {
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".bmp",
+    ".webp",
+    ".gif",
+}
+
+SUPPORTED_EXTENSIONS = (
+    SUPPORTED_VIDEO_EXTENSIONS
+    | SUPPORTED_AUDIO_EXTENSIONS
+    | SUPPORTED_IMAGE_EXTENSIONS
+)
 
 
 SUPPORTED_VIDEO_CODECS = {
