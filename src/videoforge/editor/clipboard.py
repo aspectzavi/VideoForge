@@ -216,22 +216,26 @@ class Clipboard:
         Cut every selected clip.
         """
 
-        selected_by_track: dict[Track, list[Clip]] = {}
+        # Track (a Pydantic model) is not hashable, so it cannot be a
+        # dict key - a list of (track, clips) pairs is used instead.
+        # (Previously this used dict[Track, list[Clip]] and raised
+        # TypeError: unhashable type: 'Track' on every call.)
+        selected_by_track: list[tuple[Track, list[Clip]]] = []
 
         for track in timeline.tracks:
             clips = [clip for clip in track.clips if clip.selected]
 
             if clips:
-                selected_by_track[track] = clips
+                selected_by_track.append((track, clips))
 
         all_selected: list[Clip] = []
 
-        for clips in selected_by_track.values():
+        for _, clips in selected_by_track:
             all_selected.extend(clips)
 
         self.copy_clips(all_selected)
 
-        for track, clips in selected_by_track.items():
+        for track, clips in selected_by_track:
             for clip in clips:
                 track.remove_clip(clip)
 

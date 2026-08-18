@@ -73,12 +73,14 @@ class SnapEngine:
         """
 
         best = position
+        best_distance = self.threshold
 
         for point in self.snap_points():
             distance = abs(point - position)
 
-            if distance <= self.threshold and distance < abs(best - position):
+            if distance <= best_distance:
                 best = point
+                best_distance = distance
 
         return best
 
