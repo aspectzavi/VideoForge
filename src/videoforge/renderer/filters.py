@@ -405,8 +405,8 @@ def build_filter_chain(
     Example
     -------
     build_filter_chain(
-        ScaleFilter(1080, 1920),
-        CropFilter(1080, 1920),
+        ScaleFilter(width=1080, height=1920),
+        CropFilter(width=1080, height=1920),
     )
     """
 

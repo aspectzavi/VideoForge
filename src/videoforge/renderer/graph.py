@@ -16,10 +16,22 @@ from uuid import uuid4
 # ==========================================================
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, eq=False)
 class GraphNode:
     """
     Represents a render operation.
+
+    eq=False keeps this identity-based (default object.__eq__/__hash__)
+    rather than dataclass's usual field-value equality. This is
+    required, not stylistic: RenderGraph.topological_sort() uses nodes
+    as dict keys, which needs them hashable, and the default
+    dataclass behavior (auto-generated __eq__ with no explicit
+    frozen=True/unsafe_hash=True) makes a class unhashable - every
+    call to topological_sort() previously raised
+    TypeError: unhashable type: 'GraphNode'. Identity-based equality
+    is also the semantically correct choice for a mutable graph node:
+    two structurally-identical-but-distinct nodes should never be
+    treated as the same node.
 
     Examples
     --------
