@@ -25,6 +25,7 @@ temp/
 
 # Output
 output/
+demo_output/
 
 # Testing
 .pytest_cache/
